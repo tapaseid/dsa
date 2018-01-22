@@ -1,2 +1,4 @@
-# This repository contains some basic implementations of data structures and algorithms.
-# Implementations are in Python language.
+# Introduction:
+
+This repository contains some basic implementations of data structure and algorithms.
+All implementations are in Python(v2.7.x) language.

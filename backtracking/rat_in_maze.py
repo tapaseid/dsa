@@ -23,7 +23,7 @@ def _solveMazeUtil(maze, n, x, y, sol):
 
 		# if none of the above movements work, then
 		# BACKTRACK: unmark x, y as a part of solution path
-		sol[x][y] = '-'
+		sol[x][y] = '-'  # backtracking step
 		return False
 
 def isSafe(maze, n, x, y):

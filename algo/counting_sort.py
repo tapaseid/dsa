@@ -18,10 +18,7 @@ def countingSort(arr_str):
 		count[ord(str(arr[i]))] -= 1
 		i -= 1
 
-	for i in range(n):
-		arr[i] = output[i]
-
-	return "".join(arr)
+	return "".join(output)
 
 # driver method
 if __name__ == '__main__':

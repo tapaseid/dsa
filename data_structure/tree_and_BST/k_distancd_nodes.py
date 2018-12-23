@@ -63,6 +63,32 @@ def printkDistanceNode(root, target, k):
     # If target was neither present in left nor in right subtree 
     return -1
 
+def dfs(root, parent=None):
+    if root:
+        root.parent = parent
+        dfs(root.left, root)
+        dfs(root.right, root)
+
+
+def k_distance_nodes(root, target, k):
+    dfs(root)
+
+    q = [[target, 0]]
+    seen = []
+    while q:
+        if q[0][1] == k:
+            return [element[0].data for element in q]
+        element = q.pop(0)
+        seen.append(element[0])
+        lst = [element[0].left, element[0].right, element[0].parent]
+        for i in lst:
+            if i and i not in seen:
+                seen.append(i)
+                q.append([i, element[1]+1])
+
+    return []
+    
+
   
 # Driver program to test above function 
 if __name__ == '__main__':
@@ -74,4 +100,5 @@ if __name__ == '__main__':
     root.left.right.left = Node(10) 
     root.left.right.right = Node(14) 
     target = root.left.right 
-    printkDistanceNode(root, target, 2) 
+    # printkDistanceNode(root, target, 2) 
+    print k_distance_nodes(root, root.left.right, 2)

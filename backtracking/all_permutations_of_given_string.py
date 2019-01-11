@@ -32,6 +32,30 @@ if __name__ == '__main__':
     # print_all_permutations(string)
 
 
+################ simplest solution ##################
+# B ['C']
+# Result:  set(['CB', 'BC'])
+# A set(['CB', 'BC'])
+# Result:  set(['ACB', 'CBA', 'BCA', 'ABC', 'BAC', 'CAB'])
+# set(['ACB', 'CBA', 'BCA', 'ABC', 'BAC', 'CAB'])
+
+def permutations(word):
+    if len(word) == 1:
+        return [word]
+
+    perms = permutations(word[1:])
+    char = word[0]
+    # print char, perms
+    result = set()
+    for perm in perms:
+        for i in range(len(perm)+1):
+            result.add(perm[:i]+char+perm[i:])
+    # print "Result: ", result
+    return result
+
+print permutations('ABC')
+# print permutations('ABCA')
+#############################################
 
 # Related examples:
 #------------------

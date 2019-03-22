@@ -17,8 +17,260 @@
 # print border
 
 
-
 import sys
+
+def _get_contiguous_subsets(arr):
+    n = len(arr)
+    res = []
+    for i in range(1, n+1):
+        l, r = 0, i
+        while r<=n:
+            res.append(arr[l:r])
+            l += 1
+            r += 1
+    return res
+    
+def _get_score(all_subsets, i):
+    import math
+    score = 0
+    for ele in all_subsets:
+        m = len(ele)
+        for j in range(1, m+1):
+            score += ele[j-1]*int(math.pow(j, i))
+    return score
+
+def max_power(all_subsets, k):
+    power = 0
+    for i in range(1,k+1):
+        power += _get_score(all_subsets, i)
+    return power%1000000007
+
+def new_fun(all_subsets, k, n):
+    import math
+    pow_i = [0]*n
+    for index in range(n):
+        for i in range(1, k+1):
+            pow_i[index] += int(math.pow(index+1, i))
+            pow_i[index] %= 1000000007
+    score = 0
+    for ele in all_subsets:
+        m = len(ele)
+        for i in range(m):
+            score += ele[i]*pow_i[i]
+            score %= 1000000007
+    return score
+
+          
+def _helper(n, x, y, c, d, e1, e2, f):
+    arr = [None]*n
+    first = (x+y)%f
+    arr[0] = first
+    for i in range(1, n):
+        tmp_x = (c*x + d*y + e1)%f
+        tmp_y = (d*x + c*y + e2)%f
+        arr[i] = (tmp_x+tmp_y)%f
+        x, y = tmp_x, tmp_y
+    return arr
+  
+t = int(raw_input())
+i = 0
+while i<t:
+    n, k, x1, y1, c, d, e1, e2, f = map(int, raw_input().strip().split())
+    arr = _helper(n, x1, y1, c, d, e1, e2, f)
+    all_subsets = _get_contiguous_subsets(arr)
+    # print arr, all_subsets
+    # new_fun(all_subsets, k, n)
+    print "Case #{}: {}".format(i+1,new_fun(all_subsets, k, n))
+    i += 1
+
+sys.exit(0)
+
+def max_beauty(arr, n):
+    res = 0
+    total_index = n/2+1 if n%2 else n/2
+    score = 0
+    l = 0
+    r = total_index
+    for i in range(r):
+        score += arr[i]
+    res = max(res, score)
+    while r < n:
+        score -= arr[l]
+        l += 1
+        score += arr[r]
+        r += 1
+        res = max(res, score)
+    return res
+    
+t = int(raw_input())
+i = 0
+while i<t:
+    n = int(raw_input())
+    arr = map(int, list(raw_input().strip()))
+    print "Case #{}: {}".format(i+1, max_beauty(arr, n))
+    i += 1
+
+
+sys.exit(0)
+
+def _is_contains_check(st, rules):
+    for rule in rules:
+        if st[:len(rule)] == rule:
+            return True
+    return False
+
+def count(n, rules):
+    st = 'R'*n
+    q = []
+    index = 0
+    q.append((st, index))
+    count = 0
+    while q:
+        st, index = q.pop(0)
+        if not _is_contains_check(st, rules):
+            count += 1
+        if index < n:
+            for i in range(index, n):
+                tmp = st
+                tmp = tmp[:i] + 'B' + tmp[i+1:]
+                q.append((tmp, i+1))
+    return count 
+    
+if __name__ == '__main__':
+    # n, k = map(int, raw_input().split())
+    # rules = []
+    # for i in range(k):
+    #     rules.append(raw_input())
+        
+    # print count(n, rules)
+
+    t = int(raw_input())
+    i = 1
+    while i<=t:
+        n, k = map(int, raw_input().split())
+        rules = []
+        for i in range(k):
+            rules.append(raw_input())
+            
+        print "Case #{}: {}".format(i, count(n, rules))
+        i += 1
+
+sys.exit(0)
+
+def maxRegion(grid):
+    m = len(grid)
+    n = len(grid[0])
+
+    mx_count = 0
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == 1:
+                print i, j, grid
+                x, y= i, j
+                count = [1]
+                dfs(grid, count, x, y, m, n)
+                print count
+                mx_count = max(mx_count, count[0])
+    return mx_count
+def dfs(grid, count, i, j, m, n):
+    # import pdb
+    # pdb.set_trace()
+    if grid[i][j] == 0 or not(i>=0 and i<m and j>=0 and j<n):
+        return 0
+    row = [-1, -1, -1, 0, 0, 1, 1, 1]
+    col = [-1, 0, 1, -1, 1, -1, 0, 1]
+
+    grid[i][j] = 0
+    for p in range(8):
+        r = i+row[p]
+        c = j+col[p]
+        if r>=0 and r<m and c>=0 and c<n and grid[r][c]==1:
+            count[0] += 1
+            dfs(grid, count, r, c, m, n)
+
+grid = [
+        [1, 1, 0, 0],
+        [0, 1, 1, 0],
+        [0, 0, 1, 1],
+        [1, 0, 0, 0]
+       ]
+print maxRegion(grid)
+sys.exit(0)
+
+def subset(lst):
+    n = len(lst)
+    tmp = [None]*n
+    _helper(lst, tmp, 0, n)
+def _helper(lst, tmp, index, n):
+    if index == n:
+        print filter(None, tmp)
+        return
+    tmp[index] = None
+    _helper(lst, tmp, index+1, n)
+    tmp[index] = lst[index]
+    _helper(lst, tmp, index+1, n)
+
+subset([1, 2, 3])
+sys.exit(0)
+
+
+def optimalUtilization(deviceCapacity, foregroundAppList, backgroundAppList):
+    # WRITE YOUR CODE HERE
+    m = len(foregroundAppList)
+    n = len(backgroundAppList)
+    res = []
+    tmp = None
+    i = 0
+    j = n-1
+    curr_diff = 10000000000
+    
+    while i < m and j >= 0:
+        if foregroundAppList[i][1] + backgroundAppList[j][1] == deviceCapacity:
+            res.append([foregroundAppList[i][0], backgroundAppList[j][0]])
+            if tmp:
+                tmp = None
+            i += 1
+            j -= 1
+        else:
+            if foregroundAppList[i][1] + backgroundAppList[j][1] < deviceCapacity:
+                if abs(foregroundAppList[i][1] + backgroundAppList[j][1] - deviceCapacity) < curr_diff:
+                    tmp = [foregroundAppList[i][0], backgroundAppList[j][0]]
+                    curr_diff = abs(foregroundAppList[i][1] + backgroundAppList[j][1] - deviceCapacity)
+                i += 1
+            else:
+                if tmp:
+                    res.append(tmp)
+                    tmp = None
+                    i += 1
+                j -= 1
+    if tmp:
+        res.append(tmp)
+    return res
+
+# foregroundAppList = [[1, 3], [2, 5], [3, 7], [4, 10]]
+# backgroundAppList = [[1, 2], [2, 3], [3, 4], [4, 5]]
+foregroundAppList = [[1, 2], [2, 4], [3, 6]]
+backgroundAppList = [[1, 2]]
+
+print optimalUtilization(7, foregroundAppList, backgroundAppList)
+def euclidean(pair):
+    import math
+    return math.sqrt(pair[0]*pair[0] + pair[1]*pair[1])
+def nearestVegetarianRestaurant(totalRestaurants, allLocations, numRestaurants):
+    # WRITE YOUR CODE HERE
+    for i in range(totalRestaurants-1):
+        swap = False
+        for j in range(totalRestaurants-1-i):
+            if euclidean(allLocations[j]) > euclidean(allLocations[j+1]):
+                allLocations[j], allLocations[j+1] = allLocations[j+1], allLocations[j]
+                swap = True
+        if not swap:
+            break
+    # print allLocations
+    return allLocations[:numRestaurants]
+
+print nearestVegetarianRestaurant(3, [[1, 2], [3, 4], [1, -1]], 2)
+sys.exit(0)
 
 def count_ways(arr, n, w):
     if w == 0:

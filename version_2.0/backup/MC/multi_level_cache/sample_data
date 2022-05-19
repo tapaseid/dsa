@@ -1,0 +1,13 @@
+w k1 v1
+w k2 v2
+w k3 v3
+r k1
+w k2 v2
+w k4 v4
+r k5
+a
+w k5 v5
+w k6 v6
+w k7 v7
+r k4
+r k7
